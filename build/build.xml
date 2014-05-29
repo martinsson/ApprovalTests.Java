@@ -1,4 +1,5 @@
 <project name="OpenSource" basedir="." default="createDownload">
+	<property file="properties/approvaltests.properties" />
 	<target name="compile" depends="cleanUp">
 		<mkdir dir="${build}" />
 		<delete dir="${build}/com/spun" />
@@ -58,27 +59,6 @@
 		<antcall target="createTeachingKidsProgramming" />
 	</target>
 
-	<target name="cleanTeachingKidsProgramming">
-		<delete dir="${tkp_project}/bin" failonerror="false" />
-		<delete dir="${tkp_project}/src" failonerror="false" />
-		<delete dir="${tkp_project}/build" failonerror="false" />
-	</target>
-
-	<target name="createTeachingKidsProgramming" depends="cleanTeachingKidsProgramming, buildJarFile">
-		<copy file="${build}/TeachingKidsProgramming.jar" todir="${tkp_project}/src/jars" />
-		<copy file="${documentation}/build.xml" todir="${tkp_project}/build" />
-		<copy todir="${tkp_project}/src" verbose="true">
-			<fileset dir="${src}">
-				<include name="org/teachingkidsprogramming/**/*.java" />
-				<include name="org/teachingkidsprogramming/**/*.docx" />
-				<exclude name="**/tests/**" />
-				<exclude name="**/completed/**" />
-			</fileset>
-		</copy>
-		<replace dir="${tkp_project}/src" token="@Ignore" value="" />
-		<zip destfile="${build}/tkp_workspace.v${version}.zip" basedir="${tkp_workspace}" includes="**">
-		</zip>
-	</target>
 	<target name="Publish    TKP Launcher">
 		<property file="properties/tkplauncher.properties" />
 		<antcall target="buildExecutableTkpJarFile" />
