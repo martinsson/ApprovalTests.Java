@@ -37,15 +37,20 @@ public class GenericDiffReporter implements EnvironmentAwareReporter
     validExtensions = TEXT_FILE_EXTENSIONS;
   }
   @Override
-  public void report(String received, String approved) throws Exception
+  public void report(final String received, final String approved) throws Exception
   {
     if (!isWorkingInThisEnvironment(received)) { throw new RuntimeException(reporterFinder.notFoundMessage()); }
     FileUtils.createIfNeeded(approved);
-    Process exec = Runtime.getRuntime().exec(getCommandLine(received, approved));
-    //    int waitFor = exec.waitFor();
-    //    String text = DatabaseLifeCycleUtils.extractText(exec.getErrorStream());
-    //    System.out.println(waitFor + text);
+    Runtime.getRuntime().exec(getCommandLine(received, approved));
+    sleepToAvoidTheDiffToolToBeKilledByThisThreadsTermination();
   }
+  
+  private void sleepToAvoidTheDiffToolToBeKilledByThisThreadsTermination() throws InterruptedException
+  {
+    int oneSecond_ieTwiceAsMuchAsNecessaryOnMyMachine = 1000;
+    Thread.sleep(oneSecond_ieTwiceAsMuchAsNecessaryOnMyMachine);
+  }
+  
   public String getCommandLine(String received, String approved)
   {
     String command = "%s " + arguments;
